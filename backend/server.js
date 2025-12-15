@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// PostgreSQL connection pool
+
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'postgres',
@@ -19,7 +19,7 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000,
 });
 
-// Test DB connection on server start
+
 pool.connect((err, client, release) => {
   if (err) {
     console.error('Error acquiring client', err.stack);
@@ -29,7 +29,7 @@ pool.connect((err, client, release) => {
   release();
 });
 
-// Get all users
+
 app.get('/users', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM users ORDER BY id ASC');
@@ -40,7 +40,6 @@ app.get('/users', async (req, res) => {
   }
 });
 
-// Add new user
 app.post('/users', async (req, res) => {
   const { name, email } = req.body;
   try {
@@ -55,7 +54,7 @@ app.post('/users', async (req, res) => {
   }
 });
 
-// Update user
+
 app.put('/users/:id', async (req, res) => {
   const { id } = req.params;
   const { name, email } = req.body;
@@ -74,7 +73,7 @@ app.put('/users/:id', async (req, res) => {
   }
 });
 
-// Delete user
+
 app.delete('/users/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -86,7 +85,7 @@ app.delete('/users/:id', async (req, res) => {
   }
 });
 
-// Start server
+
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server started on port ${port}`);
